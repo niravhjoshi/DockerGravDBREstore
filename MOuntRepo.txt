@@ -1,0 +1,16 @@
+ "Mounts": [
+            {
+                "Source": "/root/mariadb/conf",
+                "Destination": "/etc/mysql",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Source": "/root/mariadb/data",
+                "Destination": "/var/lib/mysql",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
