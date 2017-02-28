@@ -6,26 +6,126 @@ import bz2
 from bz2 import decompress
 import tarfile
 
+# Mac Static Variable
+githubrepo = "https://github.com/niravhjoshi/DockerGravDBREstore.git"
+DropDBSQL = "/Users/nirav/mariadb/conf/DockerGravDBREstore/DroPDB.sql"
+CreateDBSQL="/Users/nirav/mariadb/conf/DockerGravDBREstore/CreateDB.sql"
+UpdateBTSSQL="/Users/nirav/mariadb/conf/DockerGravDBREstore/UpdateBTS.sql"
+global filelist
+'''
+# Linux Docker variable
+githubrepo = "https://github.com/niravhjoshi/DockerGravDBREstore.git"
+DropDBSQL = "/root/mariadb/conf/DockerGravDBREstore/DroPDB.sql"
+CreateDBSQL="/root/mariadb/conf/DockerGravDBREstore/CreateDB.sql"
+#UpdateBTSSQL="/Users/nirav/mariadb/conf/DockerGravDBREstore/UpdateBTS.sql"
+global filelist
+'''
 
 
+def getGitRepo():
+    os.chdir("/Users/nirav/mariadb/conf")
+    oscmd0 = "git clone %s" % githubrepo
 
+    if os.system(oscmd0) != 0:
+        print("git clone is failed some how")
+    os.chdir("/Users/nirav/mariadb/conf/DockerGravDBREstore")
+    print 'git clone failed try with Pull'
+    osgitpull = "git pull"
+    os.system(osgitpull)
+    print "Cloning of reposiotry is done"
 
-
+#Restoration of database.
 def MariaDBRestore():
     #/Users/nirav/mariadb/conf/
-    print "scp %s nirav.joshi@108.168.207.6:/home/nirav.joshi"
-    oscmd1 = "docker exec -it mariadb mysql -uroot -pgravitant < DroPDB.sql "
+
+    oscmd1 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant<%s' %DropDBSQL
+    #oscmd1 = "/usr/local/bin/docker ps"
     os.system(oscmd1)
-    oscmd2 = "docker exec -it mariadb mysql -uroot -pgravitant < CreateDB.sql "
-    #os.system(oscmd2)
-    oscmd2 = "docker exec -it mariadb mysql -uroot -pgravitant < CreateDB.sql "
-    # os.system(oscmd2)
-    oscmd2 = "docker exec -it mariadb mysql -uroot -pgravitant < CreateDB.sql "
-    # os.system(oscmd2)
+
+    oscmd2 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant <%s' %CreateDBSQL
+    os.system(oscmd2)
+    print iterpath
+
+    #    if filesname.find('softlayer') != -1:
+
+    for filesname in glob.glob(iterpath):
+        if '_bts.' in filesname:
+            oscmd3 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant bts < "+""+filesname+""
+            os.system(oscmd3)
+            print "restore done for bts"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_tags.' in filesname:
+            oscmd4="/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant tags <"+""+filesname+""
+            os.system(oscmd4)
+            print "restore done for tags"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_cme.' in filesname:
+            oscmd5 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant cme <" + "" + filesname + ""
+            os.system(oscmd5)
+            print "restore done for cme"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_sds.' in filesname:
+            oscmd6 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant sds <" + "" + filesname + ""
+            os.system(oscmd6)
+            print "restore done  for sds"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_sfb.' in filesname:
+            oscmd8 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant sfb <" + "" + filesname + ""
+            os.system(oscmd8)
+            print "restore done for sfb"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_softlayer.' in filesname:
+            oscmd9 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant softlayer <" + "" + filesname + ""
+            os.system(oscmd9)
+            print "restore done for softlayer"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_demo.' in filesname:
+            oscmd10 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant demo <" + "" + filesname + ""
+            os.system(oscmd10)
+            print "restore done for demo"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_pyscreener.' in filesname:
+            oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant pyscreener <" + "" + filesname + ""
+            os.system(oscmd11)
+            print "restore done for pyscreener"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_comparedb.' in filesname:
+            oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant comparedb <" + "" + filesname + ""
+            os.system(oscmd11)
+            print "restore done for comparedb"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_ods.' in filesname:
+            oscmd7 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant ods <" + "" + filesname + ""
+            os.system(oscmd7)
+            print "restore done for ods"
+            break
+
+
+    #oscmd12 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant < %s" % UpdateBTSSQL
+    #os.system(oscmd12)
+    print "DB Restore completed fine and update also ran"
 
 
 def DecompressFiles():
-
+    global iterpath
     # Add File where you have dump your bz2 database backup.
     while True:
         user_dirInput = raw_input("Please enter your bz2 database backup location(Default will be /root/DBDrop/:->")
@@ -52,7 +152,7 @@ def DecompressFiles():
             file_name = filelist[file_no]
 
             print "You have selected ----->%s" %(file_name)
-
+            print filelist
             break
 
     #Please enter decompress path for your bz2 file if it is not there create it.
@@ -71,7 +171,7 @@ def DecompressFiles():
             newfile_name = file_name[0:-8]
             print newfile_name
             myfile_name= "db_dump"
-            outfile_path = os.path.join(decompath + "/",myfile_name)
+            outfile_path = os.path.join(decompath ,myfile_name)
             inputfile_path = os.path.join(file_name)
             print outfile_path
             print inputfile_path
@@ -80,13 +180,19 @@ def DecompressFiles():
             tar.close()
 
             print "Decmpression has been done for %s " % (decompath)
+            iterpath = (outfile_path+'/*.sql')
+
+
             break
+    print iterpath
 
-
+def MariaDBBackup():
+    print "Backing up mariaDB"
 
 
 if __name__ == '__main__':
-
-    MariaDBRestore()
+    #getGitRepo()
     DecompressFiles()
+    MariaDBRestore()
+    #MariaDBBackup()
 
