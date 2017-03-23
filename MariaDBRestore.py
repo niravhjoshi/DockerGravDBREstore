@@ -164,7 +164,22 @@ def DecompressFiles():
             os.makedirs(user_DecomDir)
             print "New Dir is created at following location" +str(user_DecomDir)
             decompath = str(user_DecomDir)
+            print "Directory is Now Created there"
+            decompath = str(user_DecomDir)
+            newfile_name = file_name[0:-8]
+            print newfile_name
+            myfile_name = "db_dump"
+            outfile_path = os.path.join(decompath, myfile_name)
+            inputfile_path = os.path.join(file_name)
+            print outfile_path
+            print inputfile_path
+            tar = tarfile.open(inputfile_path, "r:bz2")
+            tar.extractall(path=outfile_path)
+            tar.close()
+            print "Decmpression has been done for %s " % (decompath)
+            iterpath = (outfile_path + '/*.sql')
             break
+
         else:
             print "Directory already there"
             decompath = str(user_DecomDir)
