@@ -5,6 +5,8 @@ import glob
 import bz2
 from bz2 import decompress
 import tarfile
+import subprocess
+import signal
 
 # Mac Static Variable
 githubrepo = "https://github.com/niravhjoshi/DockerGravDBREstore.git"
@@ -21,7 +23,16 @@ CreateDBSQL="/root/mariadb/conf/DockerGravDBREstore/CreateDB.sql"
 global filelist
 '''
 
-
+def killJboss():
+    processname = 'mysql'
+    p = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+        if 'mysql' in line:
+            pid = int(line.split(None, 1)[0])
+            oscmdkill = "sudo kill -9 {0}".format(pid)
+            os.system(oscmdkill)
+            print "Jboss Killed"
 def getGitRepo():
     os.chdir("/Users/nirav/mariadb/conf")
     oscmd0 = "git clone %s" % githubrepo
@@ -114,6 +125,13 @@ def MariaDBRestore():
             oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} comparedb <{1}".format(rootpw,filesname)
             os.system(oscmd11)
             print "restore done for comparedb"
+            break
+
+    for filesname in glob.glob(iterpath):
+        if '_jobdb.' in filesname:
+            oscmd7 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} jobdb <{1}".format(rootpw, filesname)
+            os.system(oscmd7)
+            print "restore done for jobDB"
             break
 
     for filesname in glob.glob(iterpath):
@@ -211,8 +229,9 @@ def MariaDBBackup():
 
 
 if __name__ == '__main__':
+    killJboss()
     #getGitRepo()
-    DecompressFiles()
-    MariaDBRestore()
+    #DecompressFiles()
+    #MariaDBRestore()
     #MariaDBBackup()
 
