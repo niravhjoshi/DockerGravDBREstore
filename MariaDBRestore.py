@@ -8,8 +8,8 @@ import tarfile
 
 # Mac Static Variable
 githubrepo = "https://github.com/niravhjoshi/DockerGravDBREstore.git"
-DropDBSQL = "/Users/nirav/mariadb/conf/DockerGravDBREstore/DroPDB.sql"
-CreateDBSQL="/Users/nirav/mariadb/conf/DockerGravDBREstore/CreateDB.sql"
+DropDBSQL = "/root/DockerGravDBREstore/DroPDB.sql"
+CreateDBSQL="/root/DockerGravDBREstore/CreateDB.sql"
 UpdateBTSSQL="/Users/nirav/mariadb/conf/DockerGravDBREstore/UpdateBTS.sql"
 global filelist
 '''
@@ -37,12 +37,17 @@ def getGitRepo():
 #Restoration of database.
 def MariaDBRestore():
     #/Users/nirav/mariadb/conf/
+    while True:
 
-    oscmd1 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant<%s' %DropDBSQL
+        rootpw= raw_input("Please enter root password for your docker instance or check in $GRAV/conf:->")
+        if rootpw == '':
+            rootpw='gravitant'
+        break
+    oscmd1 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0}<{1}'.format(rootpw,DropDBSQL)
     #oscmd1 = "/usr/local/bin/docker ps"
     os.system(oscmd1)
 
-    oscmd2 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant <%s' %CreateDBSQL
+    oscmd2 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0}<{1}'.format(rootpw,CreateDBSQL)
     os.system(oscmd2)
     print iterpath
 
@@ -50,70 +55,70 @@ def MariaDBRestore():
 
     for filesname in glob.glob(iterpath):
         if '_bts.' in filesname:
-            oscmd3 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant bts < "+""+filesname+""
+            oscmd3 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} bts < {1}'.format(rootpw,filesname)
             os.system(oscmd3)
             print "restore done for bts"
             break
 
     for filesname in glob.glob(iterpath):
         if '_tags.' in filesname:
-            oscmd4="/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant tags <"+""+filesname+""
+            oscmd4='/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} tags <{1}'.format(rootpw,filesname)
             os.system(oscmd4)
             print "restore done for tags"
             break
 
     for filesname in glob.glob(iterpath):
         if '_cme.' in filesname:
-            oscmd5 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant cme <" + "" + filesname + ""
+            oscmd5 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} cme <{1}'.format(rootpw,filesname)
             os.system(oscmd5)
             print "restore done for cme"
             break
 
     for filesname in glob.glob(iterpath):
         if '_sds.' in filesname:
-            oscmd6 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant sds <" + "" + filesname + ""
+            oscmd6 = '/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} sds <{1}'.format(rootpw,filesname)
             os.system(oscmd6)
             print "restore done  for sds"
             break
 
     for filesname in glob.glob(iterpath):
         if '_sfb.' in filesname:
-            oscmd8 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant sfb <" + "" + filesname + ""
+            oscmd8 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} sfb <{1}".format(rootpw,filesname)
             os.system(oscmd8)
             print "restore done for sfb"
             break
 
     for filesname in glob.glob(iterpath):
         if '_softlayer.' in filesname:
-            oscmd9 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant softlayer <" + "" + filesname + ""
+            oscmd9 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} softlayer <{1}".format(rootpw,filesname)
             os.system(oscmd9)
             print "restore done for softlayer"
             break
 
     for filesname in glob.glob(iterpath):
         if '_demo.' in filesname:
-            oscmd10 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant demo <" + "" + filesname + ""
+            oscmd10 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} demo <{1}".format(rootpw,filesname)
             os.system(oscmd10)
             print "restore done for demo"
             break
 
     for filesname in glob.glob(iterpath):
         if '_pyscreener.' in filesname:
-            oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant pyscreener <" + "" + filesname + ""
+            oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} pyscreener <{1}".format(rootpw,filesname)
             os.system(oscmd11)
             print "restore done for pyscreener"
             break
 
     for filesname in glob.glob(iterpath):
         if '_comparedb.' in filesname:
-            oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant comparedb <" + "" + filesname + ""
+            oscmd11 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} comparedb <{1}".format(rootpw,filesname)
             os.system(oscmd11)
             print "restore done for comparedb"
             break
 
     for filesname in glob.glob(iterpath):
         if '_ods.' in filesname:
-            oscmd7 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -pgravitant ods <" + "" + filesname + ""
+            oscmd7 = "/usr/local/bin/docker exec -i mariadb mysql -uroot -p{0} ods <{1}".format(rootpw,filesname)
             os.system(oscmd7)
             print "restore done for ods"
             break
