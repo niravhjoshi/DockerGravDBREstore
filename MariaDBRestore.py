@@ -231,7 +231,7 @@ def MariaDBBackup():
 if __name__ == '__main__':
     killJboss()
     #getGitRepo()
-    #DecompressFiles()
-    #MariaDBRestore()
+    DecompressFiles()
+    MariaDBRestore()
     #MariaDBBackup()
 
